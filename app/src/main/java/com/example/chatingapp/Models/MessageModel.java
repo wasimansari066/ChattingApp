@@ -1,7 +1,7 @@
 package com.example.chatingapp.Models;
 
 public class MessageModel {
-    String uId, message, messageId;
+    String uId, message, messageId, imageUrl;
     Long timestamp;
 
     public MessageModel(String uId, String message, Long timestamp) {
@@ -16,6 +16,14 @@ public class MessageModel {
     }
 
     public MessageModel(){}
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 
     public String getMessageId() {
         return messageId;

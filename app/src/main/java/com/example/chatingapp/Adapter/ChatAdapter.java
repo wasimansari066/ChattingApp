@@ -13,8 +13,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chatingapp.Models.MessageModel;
 import com.example.chatingapp.R;
+import com.example.chatingapp.databinding.SampleRecieverBinding;
+import com.example.chatingapp.databinding.SampleSenderBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -66,6 +69,17 @@ public class ChatAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         MessageModel messageModel = messageModels.get(position);
 
+        if(holder.getClass() == SenderViewHolder.class){
+            SenderViewHolder viewHolder = (SenderViewHolder)holder; 
+            
+            if(messageModel.getMessage().equals("photo")){
+                viewHolder.binding.images.setVisibility(View.VISIBLE);
+                viewHolder.binding.senderText.setVisibility(View.GONE);
+                Picasso.get().load(messageModel.getImageUrl())
+                        .placeholder(R.drawable.avatar)
+                        .into(viewHolder.binding.images);
+            }
+        }
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
@@ -92,10 +106,19 @@ public class ChatAdapter extends RecyclerView.Adapter {
         });
 
         if(holder.getClass() == SenderViewHolder.class){
-            ((SenderViewHolder)holder).senderMsg.setText(messageModel.getMessage());
+            SenderViewHolder viewHolder = (SenderViewHolder)holder;
+            ((SenderViewHolder)holder).binding.senderText.setText(messageModel.getMessage());
         }
         else{
-            ((RecieverViewHolder)holder).recieverMsg.setText(messageModel.getMessage());
+            RecieverViewHolder viewHolder = (RecieverViewHolder)holder;
+            ((RecieverViewHolder)holder).binding.recieverText.setText(messageModel.getMessage());
+            if(messageModel.getMessage().equals("photo")){
+                viewHolder.binding.images.setVisibility(View.VISIBLE);
+                viewHolder.binding.recieverText.setVisibility(View.GONE);
+                Picasso.get().load(messageModel.getImageUrl())
+                        .placeholder(R.drawable.avatar)
+                        .into(viewHolder.binding.images);
+            }
         }
 
     }
@@ -106,21 +129,20 @@ public class ChatAdapter extends RecyclerView.Adapter {
     }
 
     public class RecieverViewHolder extends RecyclerView.ViewHolder {
-        TextView recieverMsg, recieverTime;
+
+        SampleRecieverBinding binding;
 
         public RecieverViewHolder(@NonNull View itemView) {
             super(itemView);
-            recieverMsg = itemView.findViewById(R.id.recieverText);
-            recieverTime = itemView.findViewById(R.id.receiverTime);
+            binding = SampleRecieverBinding.bind(itemView);
         }
     }
 
     public class SenderViewHolder extends RecyclerView.ViewHolder {
-        TextView senderMsg, senderTime;
+        SampleSenderBinding binding;
         public SenderViewHolder(@NonNull View itemView) {
             super(itemView);
-            senderMsg = itemView.findViewById(R.id.senderText);
-            senderTime = itemView.findViewById(R.id.senderTime);
+            binding = SampleSenderBinding.bind(itemView);
         }
     }
 }

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ChatDetailsActivity"
-    android:background="@color/cardview_shadow_start_color">
+    android:background="@color/white">
 
 
     <androidx.recyclerview.widget.RecyclerView
@@ -15,7 +15,10 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/linear"
         android:layout_below="@+id/toolbar"
-        android:background="@color/cardview_shadow_start_color" />
+        android:background="@drawable/img">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
 
     <LinearLayout
         android:id="@+id/linear"
@@ -24,16 +27,46 @@
         android:layout_alignParentBottom="true"
         android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/etMessage"
-            android:layout_width="358dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/textbox"
-            android:ems="10"
-            android:hint="Type a message"
-            android:inputType="textPersonName"
-            android:padding="10dp" />
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/textbox">
+
+                <EditText
+                    android:id="@+id/etMessage"
+                    android:layout_width="358dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="Type a message...."
+                    android:inputType="textPersonName"
+                    android:padding="10dp" />
+
+                <ImageView
+                    android:id="@+id/attachment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|right"
+                    android:layout_marginRight="10dp"
+                    android:scrollbarSize="6dp"
+                    app:srcCompat="@drawable/ic_baseline_attach_file_24" />
+
+                <ImageView
+                    android:id="@+id/camera"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="10dp"
+                    android:backgroundTint="#131313"
+                    app:srcCompat="@drawable/ic_baseline_photo_camera_24" />
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
 
         <ImageView
             android:id="@+id/send"

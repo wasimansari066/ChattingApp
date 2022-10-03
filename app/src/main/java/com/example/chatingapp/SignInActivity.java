@@ -37,7 +37,7 @@ public class SignInActivity extends AppCompatActivity {
     FirebaseDatabase firebaseDatabase;
     GoogleSignInClient googleSignInClient;
 
-    Button btn, btnGoogle;
+    Button btnSignIn, btnGoogle;
     EditText etMail, etPassword;
     TextView tvClicksignup;
 
@@ -53,7 +53,7 @@ public class SignInActivity extends AppCompatActivity {
         btnGoogle = findViewById(R.id.btnGoogle);
         etMail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
-        btn = findViewById(R.id.btnSignIn);
+        btnSignIn = findViewById(R.id.btnSignIn);
         tvClicksignup = findViewById(R.id.tvClicksignup);
         auth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -70,7 +70,7 @@ public class SignInActivity extends AppCompatActivity {
 
         googleSignInClient= GoogleSignIn.getClient(this, gso);
 
-        btn.setOnClickListener(new View.OnClickListener() {
+        btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(etMail.getText().toString().isEmpty()){
@@ -94,6 +94,7 @@ public class SignInActivity extends AppCompatActivity {
                                 {
                                     Intent intent = new Intent(SignInActivity.this, MainActivity.class);
                                     startActivity(intent);
+                                    finish();
                                 }
                                 else{
                                     Toast.makeText(SignInActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
@@ -107,6 +108,7 @@ public class SignInActivity extends AppCompatActivity {
         {
             Intent intent = new Intent(SignInActivity.this, MainActivity.class);
             startActivity(intent);
+            finish();
         }
 
         tvClicksignup.setOnClickListener(new View.OnClickListener() {
@@ -114,6 +116,7 @@ public class SignInActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(SignInActivity.this, SignUpActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 

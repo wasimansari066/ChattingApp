@@ -17,6 +17,7 @@ import com.example.chatingapp.Adapter.UsersAdapter;
 import com.example.chatingapp.ChatDetailsActivity;
 import com.example.chatingapp.MainActivity;
 import com.example.chatingapp.Models.Users;
+import com.example.chatingapp.NewsActivity;
 import com.example.chatingapp.R;
 import com.example.chatingapp.databinding.ActivityMainBinding;
 import com.example.chatingapp.databinding.FragmentChatsBinding;
@@ -58,9 +59,9 @@ public class ChatsFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(requireContext(), MainActivity.class);
+                Intent intent = new Intent(requireContext(), NewsActivity.class);
                 startActivity(intent);
-                Toast.makeText(requireContext(), "Hi, I am Clicked.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Welcome to news", Toast.LENGTH_SHORT).show();
             }
         });
 

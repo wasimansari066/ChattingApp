@@ -15,7 +15,8 @@
         android:layout_marginRight="20dp"
         android:layout_marginBottom="30dp"
         android:clickable="true"
-        android:src="@drawable/ic_baseline_music_note_24"
+        android:src="@drawable/newspaper"
+        android:background="@drawable/newspaper"
         />
 
     <androidx.recyclerview.widget.RecyclerView

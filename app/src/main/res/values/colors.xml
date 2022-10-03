@@ -4,6 +4,7 @@
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_500">#8acfc2</color>
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
@@ -13,4 +14,8 @@
 
     <color name="fb_color">#3c5793</color>
     <color name="chat_background">#8BC34A</color>
+
+    <color name="black_shade1">#292D36</color>
+    <color name="grey">#424242</color>
+    <color name="yellow">#ffa500</color>
 </resources>
