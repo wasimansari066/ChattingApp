@@ -19,6 +19,7 @@ import com.example.chatingapp.databinding.ActivityMainBinding;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,8 +27,7 @@ public class MainActivity extends AppCompatActivity {
     FirebaseAuth auth;
     TabLayout tabLayout;
     ViewPager viewPager;
-    public FloatingActionButton floatingActionButton;
-
+    FirebaseDatabase database;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,11 +37,10 @@ public class MainActivity extends AppCompatActivity {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
         auth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
 
         tabLayout = findViewById(R.id.tabLayout);
         viewPager= findViewById(R.id.viewPager);
-        floatingActionButton = findViewById(R.id.floatingActionButton);
-
 
         tabLayout.addTab(binding.tabLayout.newTab().setText("Chats"));
         tabLayout.addTab(binding.tabLayout.newTab().setText("STATUS"));
@@ -54,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
-                finish();
             }
 
             @Override
@@ -78,6 +76,20 @@ public class MainActivity extends AppCompatActivity {
         inflater.inflate(R.menu.menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        String currentId = FirebaseAuth.getInstance().getUid();
+        database.getReference().child("presence").child(currentId).setValue("online");
+    }
+
+//    @Override
+//    protected void onStop() {
+//        String currentId = FirebaseAuth.getInstance().getUid();
+//        database.getReference().child("presence").child(currentId).setValue("offline");
+//        super.onStop();
+//    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -106,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         Intent intent = new Intent(Intent.ACTION_MAIN);
-        //intent.addCategory(Intent.CATEGORY_HOME);
+        intent.addCategory(Intent.CATEGORY_HOME);
         startActivity(intent);
     }
 }

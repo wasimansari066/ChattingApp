@@ -26,7 +26,7 @@
             app:layout_constraintGuide_percent="0.8632479" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintEnd_toStartOf="@+id/guideline2"
@@ -38,28 +38,33 @@
                 android:layout_width="200dp"
                 android:layout_height="130dp"
                 android:layout_margin="5dp"
+                android:scaleType="centerCrop"
                 android:visibility="gone"
-                app:srcCompat="@drawable/ic_baseline_image_24" />
+                app:srcCompat="@drawable/images" />
 
             <TextView
                 android:id="@+id/senderText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="5dp"
+                android:layout_marginLeft="1dp"
                 android:layout_marginBottom="3dp"
                 android:inputType="textLongMessage|textMultiLine"
-                android:maxWidth="270dp"
+                android:maxWidth="220dp"
                 android:minWidth="50dp"
-                android:text="gggggggggggg" />
+                android:text="gggggggggggg"
+                android:textColor="@color/white" />
 
             <TextView
                 android:id="@+id/senderTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
+                android:layout_gravity="right"
                 android:text="12:00"
-                android:textSize="12sp"
-                android:visibility="visible" />
+                android:textSize="10sp"
+                android:textColor="@color/white"
+                android:visibility="visible"
+                />
 
         </LinearLayout>
 

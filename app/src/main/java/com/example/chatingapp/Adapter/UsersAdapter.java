@@ -21,7 +21,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> {
     ArrayList<Users> list;
@@ -45,17 +47,23 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
         Picasso.get().load(users.getProfilePic()).placeholder(R.drawable.avatar).into(holder.image);
         holder.userName.setText(users.getUsername());
 
-        FirebaseDatabase.getInstance().getReference().child("chats")
-                .child(FirebaseAuth.getInstance().getUid() + users.getUserid())
-                .orderByChild("timestamp")
-                .limitToLast(1)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+        String senderId = FirebaseAuth.getInstance().getUid();
+        String senderRoom = senderId + users.getUserid();
+
+        FirebaseDatabase.getInstance().getReference()
+                .child("chats")
+                .child(senderRoom)
+                .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if(snapshot.hasChildren()){
-                            for(DataSnapshot snapshot1 : snapshot.getChildren()){
-                                holder.lastMessage.setText(snapshot1.child("message").getValue().toString());
-                            }
+                        if (snapshot.exists()) {
+                            String lastMsg = snapshot.child("lastMsg").getValue(String.class);
+                            long time = snapshot.child("lastMsgTime").getValue(Long.class);
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a");
+                            holder.lastMsgTime.setText(dateFormat.format(new Date(time)));
+                            holder.lastMessage.setText(lastMsg);
+                        }else {
+                            holder.lastMessage.setText("Tap to chat");
                         }
 
                     }
@@ -86,13 +94,14 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView image;
-        TextView userName, lastMessage;
+        TextView userName, lastMessage,lastMsgTime;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             image = itemView.findViewById(R.id.profile_image);
             userName = itemView.findViewById(R.id.userNameList);
             lastMessage = itemView.findViewById(R.id.lastMessage);
+            lastMsgTime = itemView.findViewById(R.id.lastMsgTime);
         }
     }
 }

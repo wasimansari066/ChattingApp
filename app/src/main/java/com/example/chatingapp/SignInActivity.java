@@ -120,6 +120,7 @@ public class SignInActivity extends AppCompatActivity {
             }
         });
 
+        // sign with google (123-192)
         btnGoogle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

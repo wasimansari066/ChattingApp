@@ -7,8 +7,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -32,6 +34,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 public class ChatDetailsActivity extends AppCompatActivity {
 
@@ -53,7 +56,7 @@ public class ChatDetailsActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         dialog = new ProgressDialog(this);
-        dialog.setMessage("Uploading image..");
+        dialog.setMessage("Sending image..");
         dialog.setCancelable(false);
         database = FirebaseDatabase.getInstance();
         auth = FirebaseAuth.getInstance();
@@ -77,8 +80,6 @@ public class ChatDetailsActivity extends AppCompatActivity {
             }
         });
 
-
-
         final ArrayList<MessageModel> messageModels = new ArrayList<>();
         final ChatAdapter chatAdapter = new ChatAdapter(messageModels, this, receiverId);
         binding.charRecyclerView.setAdapter(chatAdapter);
@@ -86,29 +87,50 @@ public class ChatDetailsActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         binding.charRecyclerView.setLayoutManager(layoutManager);
 
+        //statusOnlineOffline(90-107)
+        database.getReference().child("presence").child(receiverId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()) {
+                    String state = snapshot.getValue(String.class);
+                    if(!state.isEmpty()){
+                        binding.currentState.setText(state);
+                        binding.currentState.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
         senderRoom = senderId + receiverId;
         recieverRoom = receiverId + senderId;
 
-        database.getReference().child("chats")
+        //message loading from firebase(93-113)
+        database.getReference()
+                .child("chats")
                 .child(senderRoom)
-                        .addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                messageModels.clear();
-                                for (DataSnapshot snapshot1 : snapshot.getChildren())
-                                {
-                                    MessageModel model = snapshot1.getValue(MessageModel.class);
-                                    model.setMessageId(snapshot1.getKey());
-                                    messageModels.add(model);
-                                }
-                                chatAdapter.notifyDataSetChanged();
-                            }
+                .child("messages")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        messageModels.clear();
+                        for (DataSnapshot snapshot1 : snapshot.getChildren())
+                        {
+                            MessageModel model = snapshot1.getValue(MessageModel.class);
+                            model.setMessageId(snapshot1.getKey());
+                            messageModels.add(model);
+                        }
+                        chatAdapter.notifyDataSetChanged();
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
+                    }
+                });
 
         binding.send.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,15 +144,26 @@ public class ChatDetailsActivity extends AppCompatActivity {
                 model.setTimestamp(new Date().getTime());
                 binding.etMessage.setText("");
 
+                HashMap<String, Object> lastMsgObj = new HashMap<>();
+                lastMsgObj.put("lastMsg", model.getMessage());
+                lastMsgObj.put("lastMsgTime",new Date().getTime());
+
+                database.getReference().child("chats").child(senderRoom).updateChildren(lastMsgObj);
+                database.getReference().child("chats").child(recieverRoom).updateChildren(lastMsgObj);
+
+                String randomKey = database.getReference().push().getKey();
+
                 database.getReference().child("chats")
                         .child(senderRoom)
-                        .push()
+                        .child("messages")
+                        .child(randomKey)
                         .setValue(model).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void unused) {
                                 database.getReference().child("chats")
                                         .child(recieverRoom)
-                                        .push()
+                                        .child("messages")
+                                        .child(randomKey)
                                         .setValue(model).addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void unused) {
@@ -150,11 +183,24 @@ public class ChatDetailsActivity extends AppCompatActivity {
                 startActivityForResult(intent, 25);
             }
         });
+
+        binding.camera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent camera_intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                // Start the activity with camera_intent, and request pic id
+                startActivityForResult(camera_intent, 51);
+            }
+        });
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 51) {
+            // BitMap is data structure of image file which store the image in memory
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
+        }
 
         if (requestCode == 25){
             if(data != null){
@@ -183,12 +229,14 @@ public class ChatDetailsActivity extends AppCompatActivity {
 
                                         database.getReference().child("chats")
                                                 .child(senderRoom)
+                                                .child("messages")
                                                 .push()
                                                 .setValue(model).addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
                                                     public void onSuccess(Void unused) {
                                                         database.getReference().child("chats")
                                                                 .child(recieverRoom)
+                                                                .child("messages")
                                                                 .push()
                                                                 .setValue(model).addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                     @Override
@@ -198,7 +246,7 @@ public class ChatDetailsActivity extends AppCompatActivity {
                                                                 });
                                                     }
                                                 });
-                                        Toast.makeText(ChatDetailsActivity.this, filepath, Toast.LENGTH_SHORT).show();
+                                        //Toast.makeText(ChatDetailsActivity.this, filepath, Toast.LENGTH_SHORT).show();
                                     }
                                 });
                             }
@@ -207,6 +255,13 @@ public class ChatDetailsActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        String currentId = FirebaseAuth.getInstance().getUid();
+        database.getReference().child("presence").child(currentId).setValue("online");
     }
 
     @Override

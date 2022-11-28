@@ -19,7 +19,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ChatAdapter extends RecyclerView.Adapter {
 
@@ -91,7 +93,7 @@ public class ChatAdapter extends RecyclerView.Adapter {
                             public void onClick(DialogInterface dialog, int which) {
                                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                                 String sender = FirebaseAuth.getInstance().getUid() + recId;
-                                database.getReference().child("chats").child(sender)
+                                database.getReference().child("chats").child(sender).child("messages")
                                         .child(messageModel.getMessageId())
                                         .setValue(null);
                             }
@@ -108,10 +110,23 @@ public class ChatAdapter extends RecyclerView.Adapter {
         if(holder.getClass() == SenderViewHolder.class){
             SenderViewHolder viewHolder = (SenderViewHolder)holder;
             ((SenderViewHolder)holder).binding.senderText.setText(messageModel.getMessage());
+
+            Date currentTime = new Date(messageModel.getTimestamp());
+            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM hh:mm aa");
+            String dateString = formatter.format(currentTime);
+
+            ((SenderViewHolder)holder).binding.senderTime.setText(dateString);
         }
         else{
             RecieverViewHolder viewHolder = (RecieverViewHolder)holder;
             ((RecieverViewHolder)holder).binding.recieverText.setText(messageModel.getMessage());
+
+
+            Date currentTime = new Date(messageModel.getTimestamp());
+            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM hh:mm aa");
+            String dateString = formatter.format(currentTime);
+
+            ((RecieverViewHolder)holder).binding.receiverTime.setText(dateString);
             if(messageModel.getMessage().equals("photo")){
                 viewHolder.binding.images.setVisibility(View.VISIBLE);
                 viewHolder.binding.recieverText.setVisibility(View.GONE);

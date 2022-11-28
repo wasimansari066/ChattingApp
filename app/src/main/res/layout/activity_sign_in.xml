@@ -44,7 +44,6 @@
             android:background="@color/white"
             android:ems="10"
             android:hint="Password"
-            android:inputType="numberPassword"
             android:padding="9dp" />
 
         <TextView
@@ -63,31 +62,16 @@
             android:layout_marginTop="10dp"
             android:text="SIGN IN" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/btnGoogle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="4dp"
-                android:layout_weight="1"
-                android:backgroundTint="@color/white"
-                android:drawableLeft="@drawable/googleg_standard_color_18"
-                android:text="GOOGLE"
-                android:textColor="@color/black" />
-
-            <Button
-                android:id="@+id/btn_fb"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
-                android:layout_weight="1"
-                android:backgroundTint="@color/fb_color"
-                android:text="FACEBOOK" />
-        </LinearLayout>
+        <Button
+            android:id="@+id/btnGoogle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="4dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/white"
+            android:drawableLeft="@drawable/googleg_standard_color_18"
+            android:text="GOOGLE"
+            android:textColor="@color/black" />
 
         <TextView
             android:id="@+id/signupPhone"
