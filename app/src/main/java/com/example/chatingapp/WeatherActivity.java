@@ -149,7 +149,8 @@ public class WeatherActivity extends AppCompatActivity {
     }
 
     private void getWeatherInfo(String cityName){
-        String url = "https://api.weatherapi.com/v1/forecast.json?key=a38b662c9a9c47319dd170052221711&q=" + cityName + "&days=1&aqi=yes&alerts=yes";
+        //http://api.weatherapi.com/v1/forecast.json?key=066c573dc8db4a258eb220202220312&q=Delhi&days=1&aqi=yes&alerts=yes
+        String url = "https://api.weatherapi.com/v1/forecast.json?key=066c573dc8db4a258eb220202220312&q=" + cityName + "&days=1&aqi=yes&alerts=yes";
         cityNameTV.setText(cityName);
         RequestQueue requestQueue = Volley.newRequestQueue(WeatherActivity.this);
 

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".GroupChatActivity"
-    android:background="@color/cardview_shadow_start_color">
+    android:background="@color/white">
 
 
     <androidx.recyclerview.widget.RecyclerView
@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/linear"
         android:layout_below="@+id/toolbar"
-        android:background="@color/cardview_shadow_start_color"/>
+        android:background="@drawable/img"/>
 
     <LinearLayout
         android:id="@+id/linear"
